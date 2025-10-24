@@ -1,6 +1,6 @@
 # setting some global constants
 %global appname webstorm
-%global build_ver 252.26830.93
+%global build_ver 252.27397.92
 
 # disable debuginfo subpackage
 %global debug_package %{nil}
@@ -21,7 +21,7 @@
 %global __requires_exclude_from %{_exclude_from}
 
 Name:    webstorm
-Version: 2025.2.3
+Version: 2025.2.4
 Release: 1%{?dist}
 Summary: The smartest JavaScript IDE
 License: Commercial
