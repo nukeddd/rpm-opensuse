@@ -1,1 +1,2 @@
 addFilter('.*')
+addFilter("non-utf8-file-in-archive")
