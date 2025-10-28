@@ -75,6 +75,8 @@ find . -type f -name "*.py" -exec sed -e 's@/usr/bin/env python.*@%{__python3}@g
 install -d %{buildroot}%{_datadir}/%{name}
 cp -arf ./{bin,jbr,lib,plugins,build.txt,product-info.json} %{buildroot}%{_datadir}/%{name}/
 
+patchelf --set-rpath '' %{buildroot}/usr/share/%{name}/jbr/lib/jcef_helper
+
 # Installing icons...
 install -d %{buildroot}%{_datadir}/pixmaps
 install -m 0644 -p bin/%{appname}.png %{buildroot}%{_datadir}/pixmaps/%{name}.png

@@ -112,6 +112,8 @@ cd target
 install -d %{buildroot}%{_datadir}/%{name}
 cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}%{_datadir}/%{name}/
 
+patchelf --set-rpath '' %{buildroot}/usr/share/%{name}/jbr/lib/jcef_helper
+
 # Installing icons...
 install -d %{buildroot}%{_datadir}/pixmaps
 install -m 0644 -p bin/%{appname}.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
