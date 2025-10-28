@@ -13,6 +13,7 @@
 %global __brp_rpmlint %{nil}
 # disable rpmlint check because it crashes on bundled jar files
 %define __brp_suse_rpmlint %{nil}
+%define __brp_rpmlint %nil
 # disable rpmlint checks
 %define __check_files %{nil}
 # disable rpath checks

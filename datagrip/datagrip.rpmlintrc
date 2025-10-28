@@ -1,4 +1,5 @@
 addFilter('.*')
+setOption("ZipCheck.scanners", "")
 setBadness('ZipCheck', 0)
 addFilter("non-utf8-file-in-archive")
 addFilter("shlib-policy-violation")
