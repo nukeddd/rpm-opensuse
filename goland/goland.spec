@@ -28,9 +28,12 @@ URL:     https://www.jetbrains.com/%{appname}/
 
 Source0: %{name}.desktop
 Source1: %{name}.metainfo.xml
+Source2: https://download-cf.jetbrains.com/go/%{name}-%{version}.tar.gz
+Source3: goland.rpmlintrc
 
 BuildRequires: desktop-file-utils
-BuildRequires: libappstream-glib
+BuildRequires: appstream-glib
+BuildRequires: hicolor-icon-theme
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
 BuildRequires: wget
@@ -55,12 +58,11 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 
 %prep
 %ifarch x86_64
-download_file="%{name}-%{version}.tar.gz"
+download_file="%{SOURCE2}"
 %else
 download_file="%{name}-%{version}-aarch64.tar.gz"
 %endif
 
-wget -q "https://download-cf.jetbrains.com/go/$download_file"
 mkdir "${download_file}.out"
 tar xf "$download_file" -C "${download_file}.out"
 mv "${download_file}.out"/*/* .
@@ -74,8 +76,8 @@ find . -type f -name "*.py" -exec sed -e 's@/usr/bin/env python.*@%{__python3}@g
 
 %install
 # Installing application...
-install -d %{buildroot}%{_datadir}/%{name}
-cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}%{_datadir}/%{name}/
+install -d %{buildroot}/usr/share/%{name}
+cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}/usr/share/%{name}/
 
 # Installing icons...
 install -d %{buildroot}%{_datadir}/pixmaps
@@ -84,24 +86,29 @@ install -d %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 install -m 0644 -p bin/%{appname}.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 # Installing launcher...
-install -d %{buildroot}%{_bindir}
-ln -s %{_datadir}/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
+install -d %{buildroot}/usr/share/metainfo
+install -m 0644 -p %{SOURCE1} %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
 
 # Installing desktop file...
-install -d %{buildroot}%{_datadir}/applications
+install -d %{buildroot}/usr/share/applications
 install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.desktop
+
+# Find and hardlink duplicate files to save space
+%fdupes %{buildroot}/usr/share/%{name}
+%fdupes %{buildroot}%{_licensedir}/%{name}
 
 # Installing metainfo...
 install -d %{buildroot}%{_metainfodir}
 install -m 0644 -p %{SOURCE1} %{buildroot}%{_metainfodir}/%{name}.metainfo.xml
 
 %check
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{name}.metainfo.xml
+appstream-util validate-relax --nonet %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %files
 %license license/*
-%{_datadir}/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
+%dir /usr/share/%{name}
+/usr/share/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
@@ -109,4 +116,4 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %{_metainfodir}/%{name}.metainfo.xml
 
 %files jbr
-%{_datadir}/%{name}/jbr
+/usr/share/%{name}/jbr

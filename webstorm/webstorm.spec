@@ -95,8 +95,8 @@ install -d %{buildroot}%{_datadir}/applications
 install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 # Find and hardlink duplicate files to save space
-%fdupes %{buildroot}/usr/share/%{name}
-%fdupes %{buildroot}%{_licensedir}/%{name}
+#%fdupes %{buildroot}/usr/share/%{name}
+#%fdupes %{buildroot}%{_licensedir}/%{name}
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
