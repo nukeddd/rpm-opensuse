@@ -9,6 +9,8 @@
 %global __strip /bin/true
 # dont repack jars
 %global __jar_repack %{nil}
+# disable rpmlint check completely as it crashes on bundled jars
+%global __brp_rpmlint %{nil}
 # disable rpmlint check because it crashes on bundled jar files
 %define __brp_suse_rpmlint %{nil}
 # disable rpmlint checks
