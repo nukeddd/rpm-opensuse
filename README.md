@@ -1,6 +1,6 @@
 # Automatically Updated RPM Repositories
 
-This repository provides configuration files to automatically update RPM packages hosted on the COPR (Community Owned Package Repositories) project using GitHub Actions. 
+This repository provides configuration files to automatically update RPM packages hosted on the OBS project using GitHub Actions. 
 
 By leveraging GitHub Actions, these configurations enable you to keep your development environment up-to-date with the latest versions of the packages you rely on. 
 
