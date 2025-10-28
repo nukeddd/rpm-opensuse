@@ -23,12 +23,17 @@ URL:     https://www.jetbrains.com/%{appname}/
 
 Source0: %{name}.desktop
 Source1: %{name}.metainfo.xml
+Source2: https://download-cf.jetbrains.com/fleet/installers/linux_x64/Fleet-%{version}.tar.gz
+Source3: jetbrains-fleet.rpmlintrc
+
 
 BuildRequires: desktop-file-utils
-BuildRequires: libappstream-glib
+BuildRequires: appstream-glib
+BuildRequires: hicolor-icon-theme
 BuildRequires: javapackages-filesystem
 BuildRequires: wget
 BuildRequires: tar
+BuildRequires: fdupes
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
@@ -38,22 +43,21 @@ Fleet is a code editor designed for simplicity, combining a clean UI, AI capabil
 
 %prep
 %ifarch x86_64
-download_file="Fleet-%{version}.tar.gz"
+download_file="%{SOURCE2}"
 download_arch="x64"
 %else
 download_file="Fleet-%{version}-aarch64.tar.gz"
 download_arch="aarch64"
 %endif
 
-wget -q "https://download-cf.jetbrains.com/fleet/installers/linux_$download_arch/$download_file"
 mkdir "${download_file}.out"
 tar xf "$download_file" -C "${download_file}.out"
 mv "${download_file}.out"/*/* .
 
 %install
 # Installing application...
-install -d %{buildroot}%{_datadir}/%{name}
-cp -arf ./{bin,lib} %{buildroot}%{_datadir}/%{name}/
+install -d %{buildroot}/usr/share/%{name}
+cp -arf ./{bin,lib} %{buildroot}/usr/share/%{name}/
 chmod -R 775 "%{buildroot}%{_datadir}/%{name}/lib/app/code-cache"
 
 # Installing icons...
@@ -62,24 +66,29 @@ install -m 0644 -p lib/Fleet.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
 
 # Installing launcher...
 install -d %{buildroot}%{_bindir}
-ln -s %{_datadir}/%{name}/bin/Fleet %{buildroot}%{_bindir}/%{name}
+ln -s /usr/share/%{name}/bin/Fleet %{buildroot}%{_bindir}/%{name}
 
 # Installing desktop file...
 install -d %{buildroot}%{_datadir}/applications
 install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 # Installing metainfo...
-install -d %{buildroot}%{_metainfodir}
-install -m 0644 -p %{SOURCE1} %{buildroot}%{_metainfodir}/%{name}.metainfo.xml
+install -d %{buildroot}/usr/share/metainfo
+install -m 0644 -p %{SOURCE1} %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
+
+# Find and hardlink duplicate files to save space
+%fdupes %{buildroot}/usr/share/%{name}
+%fdupes %{buildroot}%{_licensedir}/%{name}
 
 %check
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{name}.metainfo.xml
+appstream-util validate-relax --nonet %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %files
 %license license/*
-%{_datadir}/%{name}
+%dir /usr/share/%{name}
+/usr/share/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
-%{_metainfodir}/%{name}.metainfo.xml
+%{_datadir}/metainfo/%{name}.metainfo.xml
