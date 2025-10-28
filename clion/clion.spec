@@ -36,9 +36,9 @@ BuildRequires: appstream-glib
 BuildRequires: patchelf
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
-BuildRequires: fdupes
 BuildRequires: wget
 BuildRequires: tar
+BuildRequires: fdupes
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
@@ -97,7 +97,6 @@ install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.deskt
 # Installing metainfo...
 install -d %{buildroot}/usr/share/metainfo
 install -m 0644 -p %{SOURCE1} %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
-
 
 # Find and hardlink duplicate files to save space
 %fdupes %{buildroot}/usr/share/%{name}

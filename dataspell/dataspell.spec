@@ -115,7 +115,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
-%{_metainfodir}/%{name}.metainfo.xml
+%{_datadir}/metainfo/%{name}.metainfo.xml
 
 %files jbr
 /usr/share/%{name}/jbr
