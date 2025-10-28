@@ -29,7 +29,7 @@ URL:     https://www.jetbrains.com/%{appname}/
 Source0: %{name}.desktop
 Source1: %{name}.metainfo.xml
 Source2: https://download-cf.jetbrains.com/python/%{name}-%{version}.tar.gz
-Source3: clion.rpmlintrc
+Source3: dataspell.rpmlintrc
 
 
 BuildRequires: desktop-file-utils
