@@ -31,6 +31,7 @@ Source1: https://download-cf.jetbrains.com/rider/JetBrains.Rider-%{version}.tar.
 Source2: rider.rpmlintrc
 
 BuildRequires: desktop-file-utils
+BuildRequires: hicolor-icon-theme
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
 BuildRequires: wget
