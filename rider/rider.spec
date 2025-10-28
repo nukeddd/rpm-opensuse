@@ -28,7 +28,7 @@ URL:     https://www.jetbrains.com/%{appname}/
 
 Source0: %{name}.desktop
 Source1: https://download-cf.jetbrains.com/rider/JetBrains.Rider-%{version}.tar.gz
-Source2: clion.rpmlintrc
+Source2: rider.rpmlintrc
 
 BuildRequires: desktop-file-utils
 BuildRequires: python3-devel
