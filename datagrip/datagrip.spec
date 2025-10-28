@@ -32,7 +32,7 @@ Source3: datagrip.rpmlintrc
 
 BuildRequires: desktop-file-utils
 BuildRequires: hicolor-icon-theme
-BuildRequires: libappstream-glib
+BuildRequires: appstream-glib
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
 BuildRequires: wget
