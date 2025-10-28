@@ -30,9 +30,12 @@ URL:     https://www.jetbrains.com/%{appname}/
 
 Source0: %{name}.desktop
 
+Source2: pycharm.rpmlintrc
+
 BuildRequires: desktop-file-utils
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
+BuildRequires: hicolor-icon-theme
 BuildRequires: wget
 BuildRequires: tar
 BuildRequires: git
