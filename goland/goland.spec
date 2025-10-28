@@ -94,13 +94,13 @@ ln -s %{_datadir}/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
 install -d %{buildroot}/usr/share/applications
 install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.desktop
 
+# Installing metainfo...
+install -d %{buildroot}/usr/share/metainfo
+install -m 0644 -p %{SOURCE1} %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
+
 # Find and hardlink duplicate files to save space
 %fdupes %{buildroot}/usr/share/%{name}
 %fdupes %{buildroot}%{_licensedir}/%{name}
-
-# Installing metainfo...
-install -d %{buildroot}%{_metainfodir}
-install -m 0644 -p %{SOURCE1} %{buildroot}%{_metainfodir}/%{name}.metainfo.xml
 
 %check
 appstream-util validate-relax --nonet %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
