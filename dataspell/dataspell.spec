@@ -30,6 +30,7 @@ Source0: %{name}.desktop
 Source1: %{name}.metainfo.xml
 Source2: https://download-cf.jetbrains.com/python/%{name}-%{version}.tar.gz
 Source3: dataspell.rpmlintrc
+Source4: https://download-cf.jetbrains.com/python/%{name}-%{version}-aarch64.tar.gz
 
 
 BuildRequires: desktop-file-utils
@@ -63,7 +64,7 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 %ifarch x86_64
 download_file="%{SOURCE2}"
 %else
-download_file="%{name}-%{version}-aarch64.tar.gz"
+download_file="%{SOURCE4}"
 %endif
 
 mkdir "${download_file}.out"
