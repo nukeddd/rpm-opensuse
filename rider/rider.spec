@@ -101,7 +101,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %files
 %license license/*
 %dir /usr/share/%{name}
-%/usr/share/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
+/usr/share/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
