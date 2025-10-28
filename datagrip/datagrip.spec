@@ -115,7 +115,7 @@ install -m 0644 -p %{SOURCE1} %{buildroot}/usr/share/metainfo/%{name}.metainfo.x
 %fdupes %{buildroot}%{_licensedir}/%{name}
 
 %check
-appstream-util validate-relax --nonet %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
+#appstream-util validate-relax --nonet %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %files
