@@ -25,7 +25,6 @@ Source0: %{name}.desktop
 Source1: %{name}.metainfo.xml
 Source2: https://download-cf.jetbrains.com/fleet/installers/linux_x64/Fleet-%{version}.tar.gz
 Source3: jetbrains-fleet.rpmlintrc
-Source4: https://download-cf.jetbrains.com/fleet/installers/linux_x64/Fleet-%{version}-aarch64.tar.gz
 
 
 BuildRequires: desktop-file-utils
@@ -47,7 +46,7 @@ Fleet is a code editor designed for simplicity, combining a clean UI, AI capabil
 download_file="%{SOURCE2}"
 download_arch="x64"
 %else
-download_file="%{SOURCE4}"
+download_file="Fleet-%{version}-aarch64.tar.gz"
 download_arch="aarch64"
 %endif
 

@@ -29,7 +29,6 @@ URL:     https://www.jetbrains.com/%{appname}/
 Source0: %{name}.desktop
 Source1: https://download-cf.jetbrains.com/rider/JetBrains.Rider-%{version}.tar.gz
 Source2: rider.rpmlintrc
-Source3: https://download-cf.jetbrains.com/rider/JetBrains.Rider-%{version}-aarch64.tar.gz
 
 BuildRequires: desktop-file-utils
 BuildRequires: hicolor-icon-theme
@@ -61,7 +60,7 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 %ifarch x86_64
 download_file="%{SOURCE1}"
 %else
-download_file="%{SOURCE3}"
+download_file="JetBrains.Rider-%{version}-aarch64.tar.gz"
 %endif
 
 mkdir "${download_file}.out"

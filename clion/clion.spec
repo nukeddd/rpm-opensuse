@@ -30,7 +30,6 @@ Source0: %{name}.desktop
 Source1: %{name}.metainfo.xml
 Source2: https://download-cf.jetbrains.com/cpp/CLion-%{version}.tar.gz
 Source3: clion.rpmlintrc
-Source2: https://download-cf.jetbrains.com/cpp/CLion-%{version}-aarch64.tar.gz
 
 BuildRequires: desktop-file-utils
 BuildRequires: appstream-glib
@@ -60,13 +59,13 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 
 %prep
 %ifarch x86_64
-download_file="%{SOURCE2}"
+download_file="CLion-%{version}.tar.gz"
+source_file="%{SOURCE2}"
 %else
-download_file="%{SOURCE4}"
+download_file="CLion-%{version}-aarch64.tar.gz"
 %endif
-
 mkdir "${download_file}.out"
-tar xf "$download_file" -C "${download_file}.out"
+tar xf "$source_file" -C "${download_file}.out"
 mv "${download_file}.out"/*/* .
 
 # Patching shebangs...

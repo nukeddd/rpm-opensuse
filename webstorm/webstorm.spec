@@ -30,8 +30,6 @@ URL:     https://www.jetbrains.com/%{appname}/
 Source0: %{name}.desktop
 Source1: https://download-cf.jetbrains.com/%{name}/WebStorm-%{version}.tar.gz
 Source2: webstorm.rpmlintrc
-Source3: https://download-cf.jetbrains.com/%{name}/WebStorm-%{version}-aarch64.tar.gz
-
 
 BuildRequires: desktop-file-utils
 BuildRequires: hicolor-icon-theme
@@ -64,7 +62,7 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 %ifarch x86_64
 download_file="%{SOURCE1}"
 %else
-download_file="%{SOURCE3}"
+download_file="WebStorm-%{version}-aarch64.tar.gz"
 %endif
 
 mkdir "${download_file}.out"
