@@ -83,6 +83,8 @@ install -d %{buildroot}/usr/share/%{name}
 cp -arf ./{bin,jbr,lib,plugins,build.txt,product-info.json} %{buildroot}/usr/share/%{name}/
 
 patchelf --set-rpath '' %{buildroot}/usr/share/%{name}/jbr/lib/jcef_helper
+patchelf --set-rpath '' %{buildroot}/usr/share/%{name}/plugins/r-plugin/rwrapper-x64-linux
+patchelf --set-rpath '' %{buildroot}/usr/share/%{name}/plugins/r-plugin/rwrapper-arm64-linux
 
 # Installing icons...
 install -d %{buildroot}%{_datadir}/pixmaps
