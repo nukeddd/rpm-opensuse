@@ -74,8 +74,8 @@ find . -type f -name "*.py" -exec sed -e 's@/usr/bin/env python.*@%{__python3}@g
 
 %install
 # Installing application...
-install -d %{buildroot}%{_datadir}/%{name}
-cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}%{_datadir}/%{name}/
+install -d %{buildroot}/usr/share/%{name}
+cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}/usr/share/%{name}/
 
 # Installing icons...
 install -d %{buildroot}%{_datadir}/pixmaps
@@ -85,7 +85,7 @@ install -m 0644 -p bin/%{appname}.svg %{buildroot}%{_datadir}/icons/hicolor/scal
 
 # Installing launcher...
 install -d %{buildroot}%{_bindir}
-ln -s %{_datadir}/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
+ln -s /usr/share/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
 
 # Installing desktop file...
 install -d %{buildroot}%{_datadir}/applications
@@ -100,14 +100,15 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %files
 %license license/*
-%{_datadir}/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
+%dir /usr/share/%{name}
+%/usr/share/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 %files jbr
-%{_datadir}/%{name}/jbr
+/usr/share/%{name}/jbr
 
 %changelog
 * Thu Jun 12 2025 M3DZIK <me@medzik.dev> - 2025.1.3-1

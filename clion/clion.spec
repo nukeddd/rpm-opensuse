@@ -59,7 +59,7 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 
 %prep
 %ifarch x86_64
-download_file="CLion-2025.2.3.tar.gz"
+download_file="CLion-%{version}.tar.gz"
 source_file="%{SOURCE2}"
 %else
 download_file="CLion-%{version}-aarch64.tar.gz"
@@ -79,17 +79,6 @@ find . -type f -name "*.py" -exec sed -e 's@/usr/bin/env python.*@%{__python3}@g
 # Installing application...
 install -d %{buildroot}/usr/share/%{name}
 cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}/usr/share/%{name}/
-
-#find %{buildroot}/usr/share/%{name} -type f \( -perm /111 -o -name "*.so*" \) -exec sh -c 'patchelf --remove-rpath "$0" 2>/dev/null || true' {} \;
-#find %{buildroot}/usr/share/%{name} -path %{buildroot}/usr/share/%{name}/jbr -prune -o -type f \( -perm /111 -o -name "*.so*" \) -exec sh -c 'patchelf --remove-rpath "$0" 2>/dev/null || true' {} \;
-
-#find %{buildroot}/usr/share/%{name} -type f -exec sed -i 's|#!%{buildroot}/env |#!%{buildroot}/|g' {} \;
-# Fix permissions on shared libraries (.so files) which must be executable
-#find %{buildroot}/usr/share/%{name} -type f -name "*.so" -exec chmod 755 {} \;
-#find %{buildroot}/usr/share/%{name} -type f -name "*.so.*" -exec chmod 755 {} \;
-
-# Fix permissions on scripts that have a shebang but are not executable
-#find %{buildroot}/usr/share/%{name} -type f -perm 644 -exec grep -qE '^#!/' {} \; -exec chmod 755 {} \;
 
 # Installing icons...
 install -d %{buildroot}%{_datadir}/pixmaps
