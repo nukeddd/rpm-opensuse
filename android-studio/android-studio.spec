@@ -35,6 +35,7 @@ BuildRequires: desktop-file-utils
 BuildRequires: libappstream-glib
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
+BuildRequires: patchelf
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem

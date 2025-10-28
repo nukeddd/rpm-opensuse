@@ -33,6 +33,7 @@ Source101: %{name}.desktop
 BuildRequires: desktop-file-utils
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
+BuildRequires: patchelf
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem

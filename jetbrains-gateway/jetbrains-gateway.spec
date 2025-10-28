@@ -33,6 +33,7 @@ BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
 BuildRequires: wget
 BuildRequires: tar
+BuildRequires: patchelf
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem

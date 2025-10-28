@@ -39,6 +39,7 @@ BuildRequires: javapackages-filesystem
 BuildRequires: wget
 BuildRequires: fdupes
 BuildRequires: tar
+BuildRequires: patchelf
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem

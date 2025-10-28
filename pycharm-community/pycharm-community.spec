@@ -41,6 +41,7 @@ BuildRequires: tar
 BuildRequires: git
 BuildRequires: p7zip
 BuildRequires: java-21-openjdk-devel
+BuildRequires: patchelf
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
