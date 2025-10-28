@@ -23,16 +23,20 @@ Name:    clion
 Version: 2025.2.4
 Release: 1%{?dist}
 Summary: A cross-platform IDE for C and C++
-License: Commercial
+License: SUSE-Liberation
 URL:     https://www.jetbrains.com/%{appname}/
 
-Source0: %{name}.desktop
-Source1: %{name}.metainfo.xml
+Source0: https://raw.githubusercontent.com/OskarKarpinski/rpm/refs/heads/main/clion/clion.desktop
+Source1: https://raw.githubusercontent.com/OskarKarpinski/rpm/refs/heads/main/clion/clion.metainfo.xml
+Source2: https://download-cf.jetbrains.com/cpp/CLion-2025.2.4.tar.gz
+Source3: clion.rpmlintrc
 
 BuildRequires: desktop-file-utils
-BuildRequires: libappstream-glib
+BuildRequires: appstream-glib
+BuildRequires: patchelf
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
+BuildRequires: fdupes
 BuildRequires: wget
 BuildRequires: tar
 
@@ -55,14 +59,13 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 
 %prep
 %ifarch x86_64
-download_file="CLion-%{version}.tar.gz"
+download_file="CLion-2025.2.3.tar.gz"
+source_file="%{SOURCE2}"
 %else
 download_file="CLion-%{version}-aarch64.tar.gz"
 %endif
-
-wget -q "https://download-cf.jetbrains.com/cpp/$download_file"
 mkdir "${download_file}.out"
-tar xf "$download_file" -C "${download_file}.out"
+tar xf "$source_file" -C "${download_file}.out"
 mv "${download_file}.out"/*/* .
 
 # Patching shebangs...
@@ -74,8 +77,19 @@ find . -type f -name "*.py" -exec sed -e 's@/usr/bin/env python.*@%{__python3}@g
 
 %install
 # Installing application...
-install -d %{buildroot}%{_datadir}/%{name}
-cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}%{_datadir}/%{name}/
+install -d %{buildroot}/usr/share/%{name}
+cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}/usr/share/%{name}/
+
+#find %{buildroot}/usr/share/%{name} -type f \( -perm /111 -o -name "*.so*" \) -exec sh -c 'patchelf --remove-rpath "$0" 2>/dev/null || true' {} \;
+#find %{buildroot}/usr/share/%{name} -path %{buildroot}/usr/share/%{name}/jbr -prune -o -type f \( -perm /111 -o -name "*.so*" \) -exec sh -c 'patchelf --remove-rpath "$0" 2>/dev/null || true' {} \;
+
+#find %{buildroot}/usr/share/%{name} -type f -exec sed -i 's|#!%{buildroot}/env |#!%{buildroot}/|g' {} \;
+# Fix permissions on shared libraries (.so files) which must be executable
+#find %{buildroot}/usr/share/%{name} -type f -name "*.so" -exec chmod 755 {} \;
+#find %{buildroot}/usr/share/%{name} -type f -name "*.so.*" -exec chmod 755 {} \;
+
+# Fix permissions on scripts that have a shebang but are not executable
+#find %{buildroot}/usr/share/%{name} -type f -perm 644 -exec grep -qE '^#!/' {} \; -exec chmod 755 {} \;
 
 # Installing icons...
 install -d %{buildroot}%{_datadir}/pixmaps
@@ -85,28 +99,37 @@ install -m 0644 -p bin/%{appname}.svg %{buildroot}%{_datadir}/icons/hicolor/scal
 
 # Installing launcher...
 install -d %{buildroot}%{_bindir}
-ln -s %{_datadir}/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
+ln -s /usr/share/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
 
 # Installing desktop file...
 install -d %{buildroot}%{_datadir}/applications
 install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 # Installing metainfo...
-install -d %{buildroot}%{_metainfodir}
-install -m 0644 -p %{SOURCE1} %{buildroot}%{_metainfodir}/%{name}.metainfo.xml
+install -d %{buildroot}/usr/share/metainfo
+install -m 0644 -p %{SOURCE1} %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
+
+
+# Find and hardlink duplicate files to save space
+%fdupes %{buildroot}/usr/share/%{name}
+%fdupes %{buildroot}%{_licensedir}/%{name}
 
 %check
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{name}.metainfo.xml
+appstream-util validate-relax --nonet %{buildroot}/usr/share/metainfo/%{name}.metainfo.xml
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %files
 %license license/*
-%{_datadir}/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
+%dir /usr/share/%{name}
+/usr/share/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
+%dir %{_datadir}/icons/hicolor
+%dir %{_datadir}/icons/hicolor/scalable
+%dir %{_datadir}/icons/hicolor/scalable/apps
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
-%{_metainfodir}/%{name}.metainfo.xml
+%{_datadir}/metainfo/%{name}.metainfo.xml
 
 %files jbr
-%{_datadir}/%{name}/jbr
+/usr/share/%{name}/jbr

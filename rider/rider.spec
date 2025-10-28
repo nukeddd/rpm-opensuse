@@ -23,16 +23,19 @@ Name:    rider
 Version: 2025.2.3
 Release: 1%{?dist}
 Summary: Fast & powerful, cross platform .NET IDE
-License: Commercial
+License: SUSE-Liberation
 URL:     https://www.jetbrains.com/%{appname}/
 
 Source0: %{name}.desktop
+Source1: https://download-cf.jetbrains.com/rider/JetBrains.Rider-%{version}.tar.gz
+Source2: clion.rpmlintrc
 
 BuildRequires: desktop-file-utils
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
 BuildRequires: wget
 BuildRequires: tar
+BuildRequires: fdupes
 
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
@@ -53,12 +56,11 @@ JetBrains Runtime - a patched Java Runtime Environment (JRE).
 
 %prep
 %ifarch x86_64
-download_file="JetBrains.Rider-%{version}.tar.gz"
+download_file="%{SOURCE1}"
 %else
 download_file="JetBrains.Rider-%{version}-aarch64.tar.gz"
 %endif
 
-wget -q "https://download-cf.jetbrains.com/rider/$download_file"
 mkdir "${download_file}.out"
 tar xf "$download_file" -C "${download_file}.out"
 mv "${download_file}.out"/*/* .
@@ -88,6 +90,10 @@ ln -s %{_datadir}/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
 # Installing desktop file...
 install -d %{buildroot}%{_datadir}/applications
 install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.desktop
+
+# Find and hardlink duplicate files to save space
+%fdupes %{buildroot}/usr/share/%{name}
+%fdupes %{buildroot}%{_licensedir}/%{name}
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
