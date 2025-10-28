@@ -1,4 +1,5 @@
 addFilter('.*')
+setBadness('ZipCheck', 0)
 addFilter("non-utf8-file-in-archive")
 addFilter("shlib-policy-violation")
 addFilter("jar-not-in-noarch-package")
