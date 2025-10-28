@@ -31,7 +31,7 @@ URL:     https://www.jetbrains.com/%{appname}/
 Source0: %{name}.desktop
 Source1: %{name}.metainfo.xml
 Source2: https://download-cf.jetbrains.com/idea/%{idea_name}-%{version}.tar.gz
-Source3: intellij-idea-community.rpmlintrc
+Source3: rpm.rpmlintrc
 
 BuildRequires: desktop-file-utils
 BuildRequires: appstream-glib
