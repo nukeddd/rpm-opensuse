@@ -37,6 +37,7 @@ BuildRequires: hicolor-icon-theme
 BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
 BuildRequires: wget
+BuildRequires: fdupes
 BuildRequires: tar
 
 Requires:      hicolor-icon-theme
