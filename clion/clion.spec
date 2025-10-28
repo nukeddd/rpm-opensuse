@@ -26,9 +26,9 @@ Summary: A cross-platform IDE for C and C++
 License: SUSE-Liberation
 URL:     https://www.jetbrains.com/%{appname}/
 
-Source0: https://raw.githubusercontent.com/OskarKarpinski/rpm/refs/heads/main/clion/clion.desktop
-Source1: https://raw.githubusercontent.com/OskarKarpinski/rpm/refs/heads/main/clion/clion.metainfo.xml
-Source2: https://download-cf.jetbrains.com/cpp/CLion-2025.2.4.tar.gz
+Source0: %{name}.desktop
+Source1: %{name}.metainfo.xml
+Source2: https://download-cf.jetbrains.com/cpp/CLion-%{version}.tar.gz
 Source3: clion.rpmlintrc
 
 BuildRequires: desktop-file-utils
