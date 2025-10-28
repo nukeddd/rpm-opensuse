@@ -9,6 +9,10 @@
 %global __strip /bin/true
 # dont repack jars
 %global __jar_repack %{nil}
+# disable rpmlint check because it crashes on bundled jar files
+%define __brp_suse_rpmlint %{nil}
+# disable rpmlint checks
+%define __check_files %{nil}
 # disable rpath checks
 %define __brp_check_rpaths %{nil}
 # there are some python 2 and python 3 scripts so there is no way out to bytecompile them ^_^
