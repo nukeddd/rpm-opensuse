@@ -27,6 +27,7 @@ https://build.opensuse.org/project/show/home:nukeddd:JetbrainsIDE
 The JetBrains repository offers the following development tools:
 
 * `clion`: C and C++ IDE
+[![build result](https://build.opensuse.org/projects/home:nukeddd:JetbrainsIDE/packages/clion/badge.svg?type=default)](https://build.opensuse.org/package/show/home:nukeddd:JetbrainsIDE/clion)
 * `dategrip`: Python IDE for data scientists
 * `dataspell`: Data science IDE for Python
 * `goland`: Go programming IDE
