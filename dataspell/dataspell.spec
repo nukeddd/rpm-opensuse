@@ -20,7 +20,7 @@
 %global __requires_exclude_from %{_exclude_from}
 
 Name:    dataspell
-Version: 2025.2.2
+Version: 2025.2.3
 Release: 1%{?dist}
 Summary: Python IDE for data scientists
 License: Commercial
