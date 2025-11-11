@@ -43,6 +43,8 @@ BuildRequires: p7zip
 BuildRequires: java-21-openjdk-devel
 BuildRequires: patchelf
 
+Requires:       gtk3
+Requires:       libgtk-3-0
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
 Requires:      %{name}-jbr = %{version}-%{release}

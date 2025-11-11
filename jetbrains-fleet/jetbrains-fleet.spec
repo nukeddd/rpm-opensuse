@@ -35,6 +35,8 @@ BuildRequires: wget
 BuildRequires: tar
 BuildRequires: fdupes
 
+Requires:       gtk3
+Requires:       libgtk-3-0
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
 

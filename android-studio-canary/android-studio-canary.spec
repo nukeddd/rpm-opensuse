@@ -35,6 +35,8 @@ BuildRequires: python3-devel
 BuildRequires: javapackages-filesystem
 BuildRequires: patchelf
 
+Requires:       gtk3
+Requires:       libgtk-3-0
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
 Requires:      %{name}-jbr = %{version}-%{release}

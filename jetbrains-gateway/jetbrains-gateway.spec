@@ -35,6 +35,8 @@ BuildRequires: wget
 BuildRequires: tar
 BuildRequires: patchelf
 
+Requires:       gtk3
+Requires:       libgtk-3-0
 Requires:      hicolor-icon-theme
 Requires:      javapackages-filesystem
 Requires:      %{name}-jbr = %{version}-%{release}
