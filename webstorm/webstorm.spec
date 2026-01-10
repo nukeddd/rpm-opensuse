@@ -187,6 +187,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 * Wed Apr 17 2024 M3DZIK <me@medzik.dev> - 2024.1.1-1
 - Update to 2024.1.1 (241.15989.47)
 
+
 * Thu Apr 04 2024 M3DZIK <me@medzik.dev> - 2024.1-1
 - Update to 2024.1 (241.14494.235)
 
