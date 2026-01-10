@@ -1,7 +1,5 @@
 # setting some global constants
 %global appname pycharm
-%global build_ver 252.28539.27
-%global idea_name pycharmPC
 
 # disable debuginfo subpackage
 %global debug_package %{nil}
@@ -29,18 +27,15 @@ License: Apache-2.0
 URL:     https://www.jetbrains.com/%{appname}/
 
 Source0: %{name}.desktop
-
-Source2: pycharm.rpmlintrc
+Source1: https://download-cdn.jetbrains.com/python/pycharm-community-%{version}.tar.gz
 
 BuildRequires: desktop-file-utils
 BuildRequires: python3-devel
-BuildRequires: javapackages-filesystem
 BuildRequires: hicolor-icon-theme
+BuildRequires: javapackages-filesystem
 BuildRequires: wget
 BuildRequires: tar
-BuildRequires: git
-BuildRequires: p7zip
-BuildRequires: java-21-openjdk-devel
+BuildRequires: fdupes
 BuildRequires: patchelf
 
 Requires:       gtk3
@@ -63,43 +58,15 @@ Requires: %{name} = %{version}-%{release}
 JetBrains Runtime - a patched Java Runtime Environment (JRE).
 
 %prep
-git clone https://github.com/JetBrains/intellij-community -b pycharm/%{build_ver} --depth 1
-cd intellij-community
-git clone git://git.jetbrains.org/idea/android.git android -b pycharm/%{build_ver} --depth 1
-
-%build
-# Building
-cd intellij-community
-./python/installers.cmd -Dintellij.build.use.compiled.classes=false -Dintellij.build.target.os=linux -Dbuild.number="%{build_ver}"
-cd ..
-
-artifact_version=$(echo "%{build_ver}" | sed -E 's|pycharm/||; s|.[0-9]+$||')
-
-idea_target_dir="./intellij-community/out/pycharm-ce/artifacts"
 %ifarch x86_64
-target_file_name="%{idea_name}-${artifact_version}.*.tar.gz"
+download_file="%{SOURCE1}"
 %else
-target_file_name="%{idea_name}-${artifact_version}.*-aarch64.tar.gz"
+download_file="pycharm-community-%{version}-aarch64.tar.gz"
 %endif
 
-target_file_pattern="${idea_target_dir}/${target_file_name}"
-
-%ifarch x86_64
-# Exclude aarch64 from search
-# Exclude musl from both searches since libjvm.so in the musl archive
-# is linked to libc.musl-x86_64.so.1, which does not exist in Fedora.
-target_file=$(ls ${target_file_pattern} 2>/dev/null | grep -E -v 'aarch64|musl' | head -n 1)
-%else
-target_file=$(ls ${target_file_pattern} 2>/dev/null | grep -E -v 'musl' | head -n 1)
-%endif
-
-mkdir -p "unpacked"
-tar xf "${target_file}" -C "unpacked"
-mkdir -p "target"
-
-mv "unpacked"/*/* target
-
-cd target
+mkdir "${download_file}.out"
+tar xf "$download_file" -C "${download_file}.out"
+mv "${download_file}.out"/*/* .
 
 # Patching shebangs...
 %if 0%{?fedora}
@@ -109,11 +76,9 @@ find . -type f -name "*.py" -exec sed -e 's@/usr/bin/env python.*@%{__python3}@g
 %endif
 
 %install
-cd target
-
 # Installing application...
-install -d %{buildroot}%{_datadir}/%{name}
-cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}%{_datadir}/%{name}/
+install -d %{buildroot}/usr/share/%{name}
+cp -arf ./{bin,jbr,lib,plugins,modules,build.txt,product-info.json} %{buildroot}/usr/share/%{name}/
 
 patchelf --set-rpath '' %{buildroot}/usr/share/%{name}/jbr/lib/jcef_helper
 
@@ -125,128 +90,31 @@ install -m 0644 -p bin/%{appname}.svg %{buildroot}%{_datadir}/icons/hicolor/scal
 
 # Installing launcher...
 install -d %{buildroot}%{_bindir}
-ln -s %{_datadir}/%{name}/bin/%{appname} %{buildroot}%{_bindir}/%{name}
+ln -s /usr/share/%{name}/bin/%{appname}.sh %{buildroot}%{_bindir}/%{name}
 
 # Installing desktop file...
 install -d %{buildroot}%{_datadir}/applications
 install -m 0644 -p %{SOURCE0} %{buildroot}%{_datadir}/applications/%{name}.desktop
 
+# Find and hardlink duplicate files to save space
+%fdupes %{buildroot}/usr/share/%{name}
+%fdupes %{buildroot}%{_licensedir}/%{name}
+
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %files
-%license target/license/*
-%{_datadir}/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
+%license license/*
+%dir /usr/share/%{name}
+/usr/share/%{name}/{bin,lib,plugins,modules,build.txt,product-info.json}
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 %files jbr
-%{_datadir}/%{name}/jbr
+/usr/share/%{name}/jbr
 
 %changelog
-* Wed Jun 11 2025 M3DZIK <me@medzik.dev> - 2025.1.2-1
-- Update to 2025.1.2 (251.26094.141)
-
-* Thu May 15 2025 M3DZIK <me@medzik.dev> - 2025.1.1.1-1
-- Update to 2025.1.1.1 (251.25410.159)
-
-* Thu May 08 2025 M3DZIK <me@medzik.dev> - 2025.1.1-1
-- Update to 2025.1.1 (251.25410.122)
-
-* Wed Apr 16 2025 M3DZIK <me@medzik.dev> - 2025.1-1
-- Update to 2025.1 (251.23774.444)
-
-* Wed Mar 19 2025 M3DZIK <me@medzik.dev> - 2024.3.5-1
-- Update to 2024.3.5 (243.26053.29)
-
-* Fri Feb 28 2025 M3DZIK <me@medzik.dev> - 2024.3.4-1
-- Update to 2024.3.4 (243.25659.43)
-
-* Fri Feb 14 2025 M3DZIK <me@medzik.dev> - 2024.3.3-1
-- Update to 2024.3.3 (243.24978.54)
-
-* Tue Jan 28 2025 M3DZIK <me@medzik.dev> - 2024.3.2-1
-- Update to 2024.3.2 (243.23654.177)
-
-* Thu Dec 19 2024 M3DZIK <me@medzik.dev> - 2024.3.1.1-1
-- Update to 2024.3.1.1 (243.22562.220)
-
-* Thu Dec 12 2024 M3DZIK <me@medzik.dev> - 2024.3.1-1
-- Update to 2024.3.1 (243.22562.180)
-
-* Wed Nov 13 2024 M3DZIK <me@medzik.dev> - 2024.3-1
-- Update to 2024.3 (243.21565.199)
-
-* Wed Oct 23 2024 M3DZIK <me@medzik.dev> - 2024.2.4-1
-- Update to 2024.2.4 (242.23726.102)
-
-* Fri Sep 27 2024 M3DZIK <me@medzik.dev> - 2024.2.3-1
-- Update to 2024.2.3 (242.23339.19)
-
-* Fri Sep 20 2024 M3DZIK <me@medzik.dev> - 2024.2.2-1
-- Update to 2024.2.2 (242.22855.92)
-
-* Thu Aug 29 2024 M3DZIK <me@medzik.dev> - 2024.2.1-1
-- Update to 2024.2.1 (242.21829.153)
-
-* Fri Aug 23 2024 M3DZIK <me@medzik.dev> - 2024.2.0.1-1
-- Update to 2024.2.0.1 (242.20224.428)
-
-* Mon Aug 12 2024 M3DZIK <me@medzik.dev> - 2024.2-1
-- Update to 2024.2 (242.20224.347)
-
-* Fri Aug 09 2024 M3DZIK <me@medzik.dev> - 2024.1.6-1
-- Update to 2024.1.6 (241.19072.16)
-
-* Tue Aug 06 2024 M3DZIK <me@medzik.dev> - 2024.1.5-1
-- Update to 2024.1.5 (241.18968.29)
-
-* Tue Jun 25 2024 M3DZIK <me@medzik.dev> - 2024.1.4-1
-- Update to 2024.1.4
-
-* Mon Jun 10 2024 M3DZIK <me@medzik.dev> - 2024.1.3-1
-- Update to 2024.1.3
-
-* Wed May 29 2024 M3DZIK <me@medzik.dev> - 2024.1.2-1
-- Update to 2024.1.2
-
-* Tue Apr 30 2024 M3DZIK <me@medzik.dev> - 2024.1.1-1
-- Update to 2024.1.1
-
-* Thu Apr 04 2024 M3DZIK <me@medzik.dev> - 2024.1-1
-- Update to 2024.1
-
-* Fri Mar 22 2024 M3DZIK <me@medzik.dev> - 2023.3.5-1
-- Update to 2023.3.5
-
-* Tue Feb 27 2024 M3DZIK <me@medzik.dev> - 2023.3.4-1
-- Update to 2023.3.4
-
-* Tue Feb 20 2024 M3DZIK <me@medzik.dev> - 2023.3.3-1
-- Update to 2023.3.3
-
-* Fri Dec 22 2023 M3DZIK <me@medzik.dev> - 2023.3.2-1
-- Update to 2023.3.2
-
-* Wed Dec 13 2023 M3DZIK <me@medzik.dev> - 2023.3.1-1
-- Update to 2023.3.1
-
-* Thu Dec 07 2023 M3DZIK <me@medzik.dev> - 2023.3-1
-- Update to 2023.3
-
-* Wed Nov 15 2023 M3DZIK <me@medzik.dev> - 2023.2.5-1
-- Update to 2023.2.5
-
-* Tue Nov 07 2023 M3DZIK <me@medzik.dev> - 2023.2.4
-- Update to 2023.2.4
-
-* Sun Oct 15 2023 M3DZIK <me@medzik.dev> - 2023.2.3
-- Update to 2023.2.3
-
-* Wed Oct 04 2023 M3DZIK <me@medzik.dev> - 2023.2.2
-- Update to 2023.2.2
-
-* Sat Sep 02 2023 M3DZIK <me@medzik.dev> - 2023.2.1
-- Initial release
+* Tue Jul 30 2024 M3DZIK <me@medzik.dev> - 2025.2.6-1
+- Update to 2025.2.6
