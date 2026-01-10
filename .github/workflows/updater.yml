@@ -39,7 +39,7 @@ jobs:
         run: echo "::set-output name=sha::$(git rev-parse HEAD)"
 
       - name: Trigger OBS builds
-        if: success() && steps.before.outputs.sha != steps.after.outputs.sha
+        #if: success() && steps.before.outputs.sha != steps.after.outputs.sha
         env:
           OSC_USER: ${{ secrets.OSC_USER }}
           OSC_PASS: ${{ secrets.OSC_PASS }}
