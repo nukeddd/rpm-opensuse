@@ -1,13 +1,8 @@
-name: Updater
-
+name: testing.yml
 on:
-  schedule:
-  - cron: "0 */6 * * *"
-
-  workflow_dispatch:
 
 jobs:
-  updater:
+  testing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,27 +10,8 @@ jobs:
         with:
           # We need full history to get commit logs
           fetch-depth: 0
-
-      - name: Configure Git
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-
-      - name: Get commit hash before update
-        id: before
-        run: echo "::set-output name=sha::$(git rev-parse HEAD)"
-
-      - name: Run updater
-        run: ./scripts/updater.sh
-        env:
-          WEBHOOK_JETBRAINS: ${{ secrets.WEBHOOK_JETBRAINS }}
-
-      - name: Get commit hash after update
-        id: after
-        run: echo "::set-output name=sha::$(git rev-parse HEAD)"
-
       - name: Trigger OBS builds
-        if: success() && steps.before.outputs.sha != steps.after.outputs.sha
+        #if: success() && steps.before.outputs.sha != steps.after.outputs.sha
         env:
           OSC_USER: ${{ secrets.OSC_USER }}
           OSC_PASS: ${{ secrets.OSC_PASS }}
@@ -57,7 +33,7 @@ jobs:
 
           COMMIT_RANGE="${{ steps.before.outputs.sha }}..${{ steps.after.outputs.sha }}"
           echo "Checking for package updates in commit range: $COMMIT_RANGE"
-
+          osc service remoterun "$OBS_PROJECT" "pycharm-community"
           # Extract package names from commit messages and trigger OBS builds
           git log --pretty=%B "$COMMIT_RANGE" | grep ": Update to " | sed 's/:.*//' | sort -u | while read -r PACKAGE_NAME; do
               echo "Found update for $PACKAGE_NAME, triggering OBS build in project $OBS_PROJECT."
