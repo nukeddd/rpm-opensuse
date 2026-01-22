@@ -109,9 +109,7 @@ update_package() {
   git commit -m "$package: Update to $latest_version"
   git push
 
-  if [ "$COPR" == "jetbrains" ]; then
-    curl -X POST "$WEBHOOK_JETBRAINS/$package"
-  fi
+
 
   echo "Committed"
 }
