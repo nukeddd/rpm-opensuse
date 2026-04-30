@@ -20,7 +20,7 @@
 %global __requires_exclude_from %{_exclude_from}
 
 Name:    pycharm-community
-Version: 2025.2.6
+Version: 2025.2.6.1
 Release: 1%{?dist}
 Summary: Intelligent Python IDE - Community
 License: Apache-2.0
